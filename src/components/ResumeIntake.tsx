@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Upload, FileText, Sparkles, Check, ArrowRight, UserCheck, Briefcase, Plus, X, Search, PenLine } from 'lucide-react';
+import { Upload, FileText, Sparkles, Check, ArrowRight, UserCheck, Briefcase, Plus, X, Search, PenLine, FileUp } from 'lucide-react';
+import { motion } from 'motion/react';
 import { JobRole } from '../types';
 import { SAMPLE_RESUMES, SampleResumeProfile } from '../data/rolesData';
 
@@ -27,6 +28,7 @@ export const ResumeIntake: React.FC<ResumeIntakeProps> = ({
   const [pdfBase64, setPdfBase64] = useState<string>('');
   const [extraSkillInput, setExtraSkillInput] = useState<string>('');
   const [extraSkills, setExtraSkills] = useState<string[]>(['Git', 'Linux Basics']);
+  const [isDragging, setIsDragging] = useState(false);
 
   // Custom role state
   const [showCustomRoleInput, setShowCustomRoleInput] = useState<boolean>(false);
@@ -85,8 +87,17 @@ export const ResumeIntake: React.FC<ResumeIntakeProps> = ({
     setCustomText(sample.resumeText);
   };
 
-  const handlePdfUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handlePdfUpload = (e: React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    let file: File | undefined;
+    if ('dataTransfer' in e) {
+      file = e.dataTransfer.files?.[0];
+    } else if ('target' in e) {
+      file = (e.target as HTMLInputElement).files?.[0];
+    }
+
     if (file) {
       if (file.type !== 'application/pdf') {
         alert('Please upload a PDF file.');
@@ -149,21 +160,21 @@ export const ResumeIntake: React.FC<ResumeIntakeProps> = ({
           <Sparkles className="w-3.5 h-3.5" />
           <span>Step 1 of 5: Profile & Resume Intake</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Where Placement Goals Meet Verified Skills
         </h1>
-        <p className="text-slate-600 max-w-2xl mx-auto text-sm sm:text-base">
+        <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto text-sm sm:text-base">
           Target your dream role, discover exact technical gaps against industry benchmarks, and prove your readiness with verified code submissions.
         </p>
       </div>
 
       {/* Target Role Selector */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
-        <div className="flex items-center space-x-2 text-slate-900 font-semibold">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-xs dark:shadow-none space-y-4">
+        <div className="flex items-center space-x-2 text-slate-900 dark:text-white font-semibold">
           <Briefcase className="w-5 h-5 text-indigo-600" />
           <span>1. Select Target Job Role</span>
         </div>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-500 dark:text-slate-400">
           The platform evaluates your resume against specific competency rubrics and interview weights for this role. Pick a predefined role or enter your own.
         </p>
 
@@ -181,12 +192,12 @@ export const ResumeIntake: React.FC<ResumeIntakeProps> = ({
                 }}
                 className={`text-left p-3.5 rounded-xl border transition-all ${
                   isSelected
-                    ? 'border-indigo-600 bg-indigo-50/70 shadow-xs ring-2 ring-indigo-500/20'
-                    : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50/70'
+                    ? 'border-indigo-600 bg-indigo-50/70 shadow-xs dark:shadow-none ring-2 ring-indigo-500/20'
+                    : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 hover:bg-slate-50/70'
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className={`text-xs font-bold ${isSelected ? 'text-indigo-900' : 'text-slate-800'}`}>
+                  <span className={`text-xs font-bold ${isSelected ? 'text-indigo-900' : 'text-slate-800 dark:text-slate-100'}`}>
                     {role.title}
                   </span>
                   <div className="flex items-center space-x-1">
@@ -196,11 +207,11 @@ export const ResumeIntake: React.FC<ResumeIntakeProps> = ({
                     {isSelected && <Check className="w-4 h-4 text-indigo-600" />}
                   </div>
                 </div>
-                <div className="text-[11px] text-slate-500 mt-1 line-clamp-2">
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
                   {role.description}
                 </div>
                 <div className="mt-2 flex items-center space-x-1">
-                  <span className="text-[10px] font-semibold text-slate-500 bg-white/80 px-2 py-0.5 rounded border border-slate-200">
+                  <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 bg-white/80 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
                     {isCustom && role.requiredSkills.length === 0
                       ? 'AI-Evaluated Skills'
                       : `${role.requiredSkills.length} Core Skills`}
@@ -215,17 +226,17 @@ export const ResumeIntake: React.FC<ResumeIntakeProps> = ({
             <button
               type="button"
               onClick={() => setShowCustomRoleInput(true)}
-              className="text-left p-3.5 rounded-xl border-2 border-dashed border-slate-300 hover:border-indigo-400 hover:bg-indigo-50/30 transition-all group"
+              className="text-left p-3.5 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-indigo-400 hover:bg-indigo-50/30 transition-all group"
             >
               <div className="flex items-center space-x-2">
                 <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                   <PenLine className="w-3.5 h-3.5 text-white" />
                 </div>
-                <span className="text-xs font-bold text-slate-700 group-hover:text-indigo-700 transition-colors">
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-200 group-hover:text-indigo-700 transition-colors">
                   Enter Any Job Role
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 mt-1.5">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5">
                 Don't see your target role? Type in any job title and AI will evaluate your skills accordingly.
               </p>
             </button>
@@ -253,7 +264,7 @@ export const ResumeIntake: React.FC<ResumeIntakeProps> = ({
                   }
                 }}
                 placeholder="e.g. DevOps Engineer, Mobile Developer..."
-                className="w-full bg-white border border-indigo-300 rounded-lg px-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
+                className="w-full bg-white dark:bg-slate-900 border border-indigo-300 rounded-lg px-3 py-2 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
               />
               <div className="flex items-center space-x-2">
                 <button
@@ -271,7 +282,7 @@ export const ResumeIntake: React.FC<ResumeIntakeProps> = ({
                     setShowCustomRoleInput(false);
                     setCustomRoleTitle('');
                   }}
-                  className="py-1.5 px-3 bg-white text-slate-600 border border-slate-300 rounded-lg text-xs font-semibold hover:bg-slate-50 transition-all"
+                  className="py-1.5 px-3 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 rounded-lg text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
                 >
                   Cancel
                 </button>
@@ -282,23 +293,23 @@ export const ResumeIntake: React.FC<ResumeIntakeProps> = ({
 
         {/* Selected Role Key Competencies Preview */}
         {currentRole && (
-          <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-200/80 text-xs text-slate-600">
-            <span className="font-semibold text-slate-800">Common Interview Topics for {currentRole.title}: </span>
+          <div className="bg-slate-50 dark:bg-slate-950 rounded-xl p-3.5 border border-slate-200/80 text-xs text-slate-600 dark:text-slate-300">
+            <span className="font-semibold text-slate-800 dark:text-slate-100">Common Interview Topics for {currentRole.title}: </span>
             <span>{currentRole.commonInterviewTopics.join(' • ')}</span>
           </div>
         )}
       </div>
 
       {/* Additional Current Skills */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-xs dark:shadow-none space-y-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 text-slate-900 font-semibold">
+          <div className="flex items-center space-x-2 text-slate-900 dark:text-white font-semibold">
             <UserCheck className="w-5 h-5 text-indigo-600" />
             <span>2. Current Skills & Tools (Self-Reported or Resume Additions)</span>
           </div>
           <span className="text-[11px] text-slate-400">Optional</span>
         </div>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-500 dark:text-slate-400">
           Add any tools, languages, or libraries you know that might not be on your resume yet.
         </p>
 
@@ -309,7 +320,7 @@ export const ResumeIntake: React.FC<ResumeIntakeProps> = ({
             onChange={(e) => setExtraSkillInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddExtraSkill())}
             placeholder="e.g. Docker, Redis, Next.js, FastAPI..."
-            className="flex-1 bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:bg-white"
+            className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:bg-white"
           />
           <button
             type="button"
@@ -341,20 +352,20 @@ export const ResumeIntake: React.FC<ResumeIntakeProps> = ({
       </div>
 
       {/* Resume Input Mode */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-5">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-xs dark:shadow-none space-y-5">
         <div className="flex items-center justify-between flex-wrap gap-2">
-          <div className="flex items-center space-x-2 text-slate-900 font-semibold">
+          <div className="flex items-center space-x-2 text-slate-900 dark:text-white font-semibold">
             <FileText className="w-5 h-5 text-indigo-600" />
             <span>3. Resume Intake</span>
           </div>
 
           {/* Mode Tabs */}
-          <div className="flex items-center bg-slate-100 p-1 rounded-lg text-xs font-semibold">
+          <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-lg text-xs font-semibold">
             <button
               type="button"
               onClick={() => setInputMode('sample')}
               className={`px-3 py-1.5 rounded-md transition-all ${
-                inputMode === 'sample' ? 'bg-white text-indigo-600 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                inputMode === 'sample' ? 'bg-white dark:bg-slate-900 text-indigo-600 shadow-xs dark:shadow-none' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               ⚡ 1-Click Samples
@@ -363,7 +374,7 @@ export const ResumeIntake: React.FC<ResumeIntakeProps> = ({
               type="button"
               onClick={() => setInputMode('upload')}
               className={`px-3 py-1.5 rounded-md transition-all ${
-                inputMode === 'upload' ? 'bg-white text-indigo-600 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                inputMode === 'upload' ? 'bg-white dark:bg-slate-900 text-indigo-600 shadow-xs dark:shadow-none' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               📄 Upload PDF
@@ -372,7 +383,7 @@ export const ResumeIntake: React.FC<ResumeIntakeProps> = ({
               type="button"
               onClick={() => setInputMode('text')}
               className={`px-3 py-1.5 rounded-md transition-all ${
-                inputMode === 'text' ? 'bg-white text-indigo-600 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                inputMode === 'text' ? 'bg-white dark:bg-slate-900 text-indigo-600 shadow-xs dark:shadow-none' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               ✍️ Paste Text
@@ -383,7 +394,7 @@ export const ResumeIntake: React.FC<ResumeIntakeProps> = ({
         {/* 1-Click Sample Resumes */}
         {inputMode === 'sample' && (
           <div className="space-y-3">
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Select a pre-loaded candidate profile to instantly explore resume parsing, gap identification, and code verification:
             </p>
             <div className="space-y-2.5">
@@ -396,14 +407,14 @@ export const ResumeIntake: React.FC<ResumeIntakeProps> = ({
                     className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
                       isSelected
                         ? 'border-indigo-600 bg-indigo-50/60 ring-2 ring-indigo-500/20'
-                        : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                        : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <div className="font-semibold text-xs text-slate-900">{sample.label}</div>
+                      <div className="font-semibold text-xs text-slate-900 dark:text-white">{sample.label}</div>
                       {isSelected && <span className="text-[10px] font-bold bg-indigo-600 text-white px-2 py-0.5 rounded-full">Selected</span>}
                     </div>
-                    <p className="text-[11px] text-slate-600 mt-1">{sample.summary}</p>
+                    <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1">{sample.summary}</p>
                   </div>
                 );
               })}
@@ -413,39 +424,77 @@ export const ResumeIntake: React.FC<ResumeIntakeProps> = ({
 
         {/* Upload PDF */}
         {inputMode === 'upload' && (
-          <div className="space-y-4">
-            <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:border-indigo-400 bg-slate-50/50 transition-all">
-              <Upload className="w-10 h-10 text-slate-400 mx-auto mb-3" />
-              <div className="text-xs font-semibold text-slate-700 mb-1">
-                {pdfFile ? pdfFile.name : 'Upload your Resume (PDF format)'}
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-4"
+          >
+            <div 
+              onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+              onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
+              onDrop={handlePdfUpload}
+              className={`relative overflow-hidden border-2 border-dashed rounded-2xl p-10 text-center transition-all duration-300 ${
+                isDragging 
+                  ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-900/20 scale-[1.02]' 
+                  : 'border-slate-300 dark:border-slate-600 hover:border-indigo-400 bg-slate-50/50 dark:bg-slate-800/50'
+              }`}
+            >
+              {isDragging && (
+                <div className="absolute inset-0 bg-indigo-500/10 dark:bg-indigo-500/20 backdrop-blur-sm z-10 flex items-center justify-center rounded-2xl">
+                  <div className="bg-white dark:bg-slate-800 px-6 py-3 rounded-full shadow-xl text-indigo-600 dark:text-indigo-400 font-bold flex items-center space-x-2 animate-bounce">
+                    <FileUp className="w-5 h-5" />
+                    <span>Drop PDF here!</span>
+                  </div>
+                </div>
+              )}
+              
+              <div className="relative z-0">
+                <div className="w-16 h-16 mx-auto mb-4 bg-white dark:bg-slate-700 shadow-sm rounded-full flex items-center justify-center">
+                  <Upload className={`w-8 h-8 transition-colors ${isDragging ? 'text-indigo-600' : 'text-slate-400 dark:text-slate-300'}`} />
+                </div>
+                <div className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">
+                  {pdfFile ? pdfFile.name : 'Drag & drop your Resume (PDF)'}
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-6 max-w-sm mx-auto">
+                  Multimodal AI extracts your skills, projects, and work history directly from document tokens.
+                </p>
+                <label className="inline-flex items-center space-x-2 px-6 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 hover:scale-105 cursor-pointer shadow-lg shadow-indigo-200 dark:shadow-indigo-900/30 transition-all">
+                  <span>Browse Files</span>
+                  <input type="file" accept="application/pdf" onChange={handlePdfUpload} className="hidden" />
+                </label>
               </div>
-              <p className="text-[11px] text-slate-500 mb-4">
-                Multimodal AI extracts your skills, projects, and work history directly from document tokens.
-              </p>
-              <label className="inline-flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-xs font-semibold hover:bg-indigo-700 cursor-pointer shadow-xs">
-                <span>Browse PDF File</span>
-                <input type="file" accept="application/pdf" onChange={handlePdfUpload} className="hidden" />
-              </label>
             </div>
+            
             {pdfFile && (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center justify-between text-xs text-emerald-800">
-                <span>Loaded: {pdfFile.name} ({(pdfFile.size / 1024).toFixed(1)} KB)</span>
-                <Check className="w-4 h-4 text-emerald-600" />
-              </div>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800/50 rounded-xl p-3 flex items-center justify-between text-xs text-emerald-800 dark:text-emerald-400 shadow-sm"
+              >
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-800/50 flex items-center justify-center">
+                    <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <div>
+                    <div className="font-semibold">{pdfFile.name}</div>
+                    <div className="text-[10px] opacity-80">{(pdfFile.size / 1024).toFixed(1)} KB • Ready for analysis</div>
+                  </div>
+                </div>
+              </motion.div>
             )}
-          </div>
+          </motion.div>
         )}
 
         {/* Paste Text */}
         {inputMode === 'text' && (
           <div className="space-y-2">
-            <label className="text-xs font-medium text-slate-700">Paste Plain Text Resume:</label>
+            <label className="text-xs font-medium text-slate-700 dark:text-slate-200">Paste Plain Text Resume:</label>
             <textarea
               rows={8}
               value={customText}
               onChange={(e) => setCustomText(e.target.value)}
               placeholder="Paste the text of your resume here, including education, technical skills, and project summaries..."
-              className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs font-mono text-slate-800 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:bg-white"
+              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-600 rounded-xl p-3 text-xs font-mono text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:bg-white"
             />
           </div>
         )}

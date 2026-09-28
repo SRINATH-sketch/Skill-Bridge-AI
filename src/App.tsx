@@ -9,16 +9,27 @@ import { ResumeIntake } from './components/ResumeIntake';
 import { ResumeProfileView } from './components/ResumeProfileView';
 import { GapAnalysisView } from './components/GapAnalysisView';
 import { TaskSolveView } from './components/TaskSolveView';
-import { VerificationReportModal } from './components/VerificationReportModal';
 import { ProgressDashboard } from './components/ProgressDashboard';
 import { ArchitectureGuide } from './components/ArchitectureGuide';
+import { Login } from './components/Login';
+import { motion, AnimatePresence } from 'motion/react';
 import { JobRole, ExtractedResumeData, GapAnalysisResult, PreparationTask, VerificationResult, StudentProgress } from './types';
 import { JOB_ROLES, SAMPLE_RESUMES } from './data/rolesData';
 import { Check, ChevronRight } from 'lucide-react';
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'journey' | 'progress' | 'guide'>('journey');
   const [journeyStep, setJourneyStep] = useState<'intake' | 'profile' | 'gaps' | 'tasks'>('intake');
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   const [roles, setRoles] = useState<JobRole[]>(JOB_ROLES);
   const [selectedRoleId, setSelectedRoleId] = useState<string>('backend_developer');
@@ -249,8 +260,12 @@ export default function App() {
 
   const nextTask = tasks.find((t) => t.id !== activeTaskId);
 
+  if (!isAuthenticated) {
+    return <Login onLogin={() => setIsAuthenticated(true)} />;
+  }
+
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 antialiased selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
       {/* Toast Notification */}
       {statusNotification && (
         <div className="fixed top-18 right-6 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-lg border border-slate-700 text-xs font-semibold flex items-center space-x-2 animate-in fade-in slide-in-from-top-2 duration-200">
@@ -266,136 +281,164 @@ export default function App() {
         selectedRole={selectedRole}
         readinessScore={progress.readinessScore}
         completedCount={progress.completedTasks}
+        isDarkMode={isDarkMode}
+        toggleDarkMode={() => setIsDarkMode(!isDarkMode)}
       />
 
       {/* Main Content Area */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 relative">
         {/* Journey Step Indicator (when in Journey mode) */}
         {activeTab === 'journey' && (
-          <div className="pt-6 pb-2">
-            <div className="max-w-3xl mx-auto bg-white border border-slate-200 rounded-xl p-2 shadow-xs flex items-center justify-between text-xs">
+          <div className="pt-6 pb-2 sticky top-16 z-20 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-md">
+            <div className="max-w-3xl mx-auto bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-slate-200 dark:border-slate-700/50 rounded-2xl p-2 shadow-sm dark:shadow-none flex items-center justify-between text-xs transition-colors">
               <button
                 type="button"
                 onClick={() => setJourneyStep('intake')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg font-semibold transition-all ${
+                className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl font-semibold transition-all ${
                   journeyStep === 'intake'
-                    ? 'bg-indigo-600 text-white shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/50 dark:hover:bg-slate-800/50'
                 }`}
               >
                 <span>1. Intake</span>
               </button>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+              <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600" />
 
               <button
                 type="button"
                 disabled={!extractedData}
                 onClick={() => setJourneyStep('profile')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg font-semibold transition-all disabled:opacity-40 ${
+                className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl font-semibold transition-all disabled:opacity-40 ${
                   journeyStep === 'profile'
-                    ? 'bg-indigo-600 text-white shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/50 dark:hover:bg-slate-800/50'
                 }`}
               >
                 <span>2. Resume Skills</span>
-                {extractedData && <Check className="w-3 h-3 text-emerald-500" />}
+                {extractedData && <Check className="w-3.5 h-3.5 text-emerald-400" />}
               </button>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+              <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600" />
 
               <button
                 type="button"
                 disabled={!gapAnalysis}
                 onClick={() => setJourneyStep('gaps')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg font-semibold transition-all disabled:opacity-40 ${
+                className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl font-semibold transition-all disabled:opacity-40 ${
                   journeyStep === 'gaps'
-                    ? 'bg-indigo-600 text-white shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/50 dark:hover:bg-slate-800/50'
                 }`}
               >
                 <span>3. Gap Analysis</span>
-                {gapAnalysis && <Check className="w-3 h-3 text-emerald-500" />}
+                {gapAnalysis && <Check className="w-3.5 h-3.5 text-emerald-400" />}
               </button>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+              <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600" />
 
               <button
                 type="button"
                 disabled={tasks.length === 0}
                 onClick={() => setJourneyStep('tasks')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg font-semibold transition-all disabled:opacity-40 ${
+                className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl font-semibold transition-all disabled:opacity-40 ${
                   journeyStep === 'tasks'
-                    ? 'bg-indigo-600 text-white shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/50 dark:hover:bg-slate-800/50'
                 }`}
               >
                 <span>4. Solve & Verify</span>
-                {tasks.length > 0 && <Check className="w-3 h-3 text-emerald-500" />}
+                {tasks.length > 0 && <Check className="w-3.5 h-3.5 text-emerald-400" />}
               </button>
             </div>
           </div>
         )}
 
-        {/* Tab 1: Full Placement Journey */}
-        {activeTab === 'journey' && (
-          <div>
-            {journeyStep === 'intake' && (
-              <ResumeIntake
-                roles={roles}
-                selectedRoleId={selectedRoleId}
-                setSelectedRoleId={setSelectedRoleId}
-                onParseResume={handleParseResume}
-                onAddCustomRole={(newRole) => setRoles((prev) => [...prev, newRole])}
-                isLoading={isLoading}
-              />
-            )}
+        <AnimatePresence mode="wait">
+          {/* Tab 1: Full Placement Journey */}
+          {activeTab === 'journey' && (
+            <motion.div
+              key="journey"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              {journeyStep === 'intake' && (
+                <ResumeIntake
+                  roles={roles}
+                  selectedRoleId={selectedRoleId}
+                  setSelectedRoleId={setSelectedRoleId}
+                  onParseResume={handleParseResume}
+                  onAddCustomRole={(newRole) => setRoles((prev) => [...prev, newRole])}
+                  isLoading={isLoading}
+                />
+              )}
 
-            {journeyStep === 'profile' && extractedData && (
-              <ResumeProfileView
-                extractedData={extractedData}
-                targetRole={selectedRole}
-                onProceedToGapAnalysis={handleProceedToGapAnalysis}
-                onReset={handleResetIntake}
-                isLoading={isLoading}
-              />
-            )}
+              {journeyStep === 'profile' && extractedData && (
+                <ResumeProfileView
+                  extractedData={extractedData}
+                  targetRole={selectedRole}
+                  onProceedToGapAnalysis={handleProceedToGapAnalysis}
+                  onReset={handleResetIntake}
+                  isLoading={isLoading}
+                />
+              )}
 
-            {journeyStep === 'gaps' && gapAnalysis && (
-              <GapAnalysisView
-                analysis={gapAnalysis}
-                role={selectedRole}
-                onGenerateTasks={handleGenerateTasks}
-                isLoading={isLoading}
-              />
-            )}
+              {journeyStep === 'gaps' && gapAnalysis && (
+                <GapAnalysisView
+                  analysis={gapAnalysis}
+                  role={selectedRole}
+                  onGenerateTasks={handleGenerateTasks}
+                  isLoading={isLoading}
+                />
+              )}
 
-            {journeyStep === 'tasks' && tasks.length > 0 && (
-              <TaskSolveView
-                tasks={tasks}
-                activeTaskId={activeTaskId}
-                setActiveTaskId={setActiveTaskId}
-                onSubmitAndVerify={handleSubmitAndVerify}
-                isLoading={isLoading}
-                latestVerification={latestVerification || undefined}
+              {journeyStep === 'tasks' && tasks.length > 0 && (
+                <TaskSolveView
+                  tasks={tasks}
+                  activeTaskId={activeTaskId}
+                  setActiveTaskId={setActiveTaskId}
+                  onSubmitAndVerify={handleSubmitAndVerify}
+                  isLoading={isLoading}
+                  latestVerification={latestVerification || undefined}
+                  progress={progress}
+                />
+              )}
+            </motion.div>
+          )}
+
+          {/* Tab 3: Progress & Mastery Dashboard */}
+          {activeTab === 'progress' && (
+            <motion.div
+              key="progress"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ProgressDashboard
                 progress={progress}
+                tasks={tasks}
+                onSelectTask={(id) => {
+                  setActiveTaskId(id);
+                  setActiveTab('journey');
+                  setJourneyStep('tasks');
+                }}
               />
-            )}
-          </div>
-        )}
+            </motion.div>
+          )}
 
-        {/* Tab 3: Progress & Mastery Dashboard */}
-        {activeTab === 'progress' && (
-          <ProgressDashboard
-            progress={progress}
-            tasks={tasks}
-            onSelectTask={(id) => {
-              setActiveTaskId(id);
-              setActiveTab('journey');
-              setJourneyStep('tasks');
-            }}
-          />
-        )}
-
-        {/* Tab 4: Architecture Guide */}
-        {activeTab === 'guide' && <ArchitectureGuide />}
+          {/* Tab 4: Architecture Guide */}
+          {activeTab === 'guide' && (
+            <motion.div
+              key="guide"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ArchitectureGuide />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
 
       {/* Verification Modal with Plagiarism and Test Results */}

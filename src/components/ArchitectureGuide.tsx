@@ -68,15 +68,15 @@ export const ArchitectureGuide: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto py-6 space-y-6">
       {/* Title */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-2">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-xs dark:shadow-none space-y-2">
         <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-[11px] font-bold uppercase tracking-wider">
           <Cpu className="w-3.5 h-3.5" />
           <span>System Architecture & Pipeline</span>
         </div>
-        <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+        <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           How SkillBridge AI Operates
         </h1>
-        <p className="text-xs text-slate-600 max-w-3xl leading-relaxed">
+        <p className="text-xs text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
           The platform bridges the gap between passive resume reviews and hands-on skill verification. By connecting AI-driven gap identification with verifiable external code submissions, students prove readiness with audited artifacts.
         </p>
       </div>
@@ -86,17 +86,17 @@ export const ArchitectureGuide: React.FC = () => {
         {steps.map((s, idx) => {
           const Icon = s.icon;
           return (
-            <div key={idx} className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-2 hover:border-indigo-300 transition-all">
+            <div key={idx} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 shadow-xs dark:shadow-none space-y-2 hover:border-indigo-300 transition-all">
               <div className="flex items-center space-x-2.5">
                 <div className="w-8 h-8 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 flex items-center justify-center shrink-0">
                   <Icon className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-xs text-slate-900">{s.step}</h3>
+                  <h3 className="font-bold text-xs text-slate-900 dark:text-white">{s.step}</h3>
                   <span className="text-[10px] font-semibold text-indigo-600">{s.tech}</span>
                 </div>
               </div>
-              <p className="text-xs text-slate-600 leading-relaxed pt-1">
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pt-1">
                 {s.desc}
               </p>
             </div>
@@ -105,12 +105,12 @@ export const ArchitectureGuide: React.FC = () => {
       </div>
 
       {/* Deep-Dive: Anti-Plagiarism AST Explanation */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-3">
-        <h3 className="font-bold text-sm text-slate-900 flex items-center space-x-2">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-xs dark:shadow-none space-y-3">
+        <h3 className="font-bold text-sm text-slate-900 dark:text-white flex items-center space-x-2">
           <ShieldCheck className="w-4 h-4 text-emerald-600" />
           <span>Deep Dive: AST Structural Normalization Against Cheating & Renamed Copies</span>
         </h3>
-        <p className="text-xs text-slate-600 leading-relaxed">
+        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
           Traditional text difference tools (like diff or simple string matching) fail when a student renames variables (e.g. renaming <code>total_orders</code> to <code>cnt</code>) or re-indents code. SkillBridge's similarity engine normalizes all variable identifiers into standard token representations (<code>ID(VAR)</code>) and tokenizes control structures. A 4-gram winnowing algorithm computes shingle intersection against reference benchmark solutions and past student submissions in O(N) time.
         </p>
       </div>

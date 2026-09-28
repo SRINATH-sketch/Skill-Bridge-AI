@@ -48,7 +48,7 @@ export const TaskSolveView: React.FC<TaskSolveViewProps> = ({
   const [showHints, setShowHints] = useState<boolean>(false);
 
   if (!activeTask) {
-    return <div className="p-8 text-center text-slate-500">No tasks generated yet.</div>;
+    return <div className="p-8 text-center text-slate-500 dark:text-slate-400">No tasks generated yet.</div>;
   }
 
   const handleCopyStarterCode = () => {
@@ -129,10 +129,10 @@ ${canonical}`);
               }}
               className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border ${
                 isSelected
-                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs dark:shadow-none'
                   : passed
                   ? 'bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100'
-                  : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                  : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               <span>Task {idx + 1}: {task.targetSkill}</span>
@@ -145,56 +145,56 @@ ${canonical}`);
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Task Specs & Test Cases */}
         <div className="lg:col-span-7 space-y-5">
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-xs dark:shadow-none space-y-4">
             {/* Header info */}
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center space-x-2">
                 <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200">
                   Target: {activeTask.targetSkill}
                 </span>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200">
                   {activeTask.difficulty}
                 </span>
               </div>
-              <div className="flex items-center space-x-1.5 text-xs text-slate-500 font-medium">
+              <div className="flex items-center space-x-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium">
                 <Clock className="w-3.5 h-3.5" />
                 <span>Est. {activeTask.estimatedMinutes} mins</span>
               </div>
             </div>
 
-            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
+            <h2 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               {activeTask.title}
             </h2>
 
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               {activeTask.description}
             </p>
 
             {/* Problem Statement */}
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
-              <h4 className="text-xs font-bold text-slate-900 flex items-center space-x-1.5">
+            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-4 space-y-2">
+              <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center space-x-1.5">
                 <FileCode className="w-4 h-4 text-indigo-600" />
                 <span>Problem Statement</span>
               </h4>
-              <p className="text-xs text-slate-700 leading-relaxed whitespace-pre-line">
+              <p className="text-xs text-slate-700 dark:text-slate-200 leading-relaxed whitespace-pre-line">
                 {activeTask.problemStatement}
               </p>
             </div>
 
             {/* Constraints & Pass/Fail Criteria */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
-                <span className="font-bold text-slate-800">Constraints:</span>
-                <ul className="list-disc list-inside space-y-1 text-slate-600 text-[11px]">
+              <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-3.5 space-y-2">
+                <span className="font-bold text-slate-800 dark:text-slate-100">Constraints:</span>
+                <ul className="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-300 text-[11px]">
                   {activeTask.constraints?.map((c, i) => (
                     <li key={i}>{c}</li>
                   ))}
                 </ul>
               </div>
 
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
-                <span className="font-bold text-slate-800">Pass/Fail Rubric:</span>
-                <ul className="list-disc list-inside space-y-1 text-slate-600 text-[11px]">
+              <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-3.5 space-y-2">
+                <span className="font-bold text-slate-800 dark:text-slate-100">Pass/Fail Rubric:</span>
+                <ul className="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-300 text-[11px]">
                   {activeTask.passFailCriteria?.map((c, i) => (
                     <li key={i}>{c}</li>
                   ))}
@@ -205,13 +205,13 @@ ${canonical}`);
             {/* Test Cases Table */}
             {activeTask.testCases && activeTask.testCases.length > 0 && (
               <div className="space-y-2">
-                <span className="text-xs font-bold text-slate-900 flex items-center space-x-1.5">
+                <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center space-x-1.5">
                   <Terminal className="w-4 h-4 text-indigo-600" />
                   <span>Validation Test Cases (Evaluated on Submission)</span>
                 </span>
-                <div className="border border-slate-200 rounded-xl overflow-hidden text-xs">
+                <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden text-xs">
                   <table className="min-w-full divide-y divide-slate-200">
-                    <thead className="bg-slate-50 font-semibold text-slate-700 text-[11px]">
+                    <thead className="bg-slate-50 dark:bg-slate-950 font-semibold text-slate-700 dark:text-slate-200 text-[11px]">
                       <tr>
                         <th className="px-3 py-2 text-left">Case</th>
                         <th className="px-3 py-2 text-left">Input Scenario</th>
@@ -220,12 +220,12 @@ ${canonical}`);
                     </thead>
                     <tbody className="divide-y divide-slate-100 text-[11px]">
                       {activeTask.testCases.map((tc, idx) => (
-                        <tr key={idx} className={tc.isEdgeCase ? 'bg-amber-50/50' : 'bg-white'}>
-                          <td className="px-3 py-2 font-mono text-slate-500">
+                        <tr key={idx} className={tc.isEdgeCase ? 'bg-amber-50/50' : 'bg-white dark:bg-slate-900'}>
+                          <td className="px-3 py-2 font-mono text-slate-500 dark:text-slate-400">
                             #{idx + 1} {tc.isEdgeCase && <span className="text-[9px] text-amber-700 bg-amber-100 px-1 py-0.2 rounded font-bold">Edge</span>}
                           </td>
-                          <td className="px-3 py-2 font-medium text-slate-800">{tc.inputDescription}</td>
-                          <td className="px-3 py-2 text-slate-600 font-mono">{tc.expectedOutput}</td>
+                          <td className="px-3 py-2 font-medium text-slate-800 dark:text-slate-100">{tc.inputDescription}</td>
+                          <td className="px-3 py-2 text-slate-600 dark:text-slate-300 font-mono">{tc.expectedOutput}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -238,8 +238,8 @@ ${canonical}`);
             {activeTask.starterCode && (
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
-                    <Code className="w-4 h-4 text-slate-600" />
+                  <span className="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-1.5">
+                    <Code className="w-4 h-4 text-slate-600 dark:text-slate-300" />
                     <span>Starter Template ({activeTask.starterCode.language})</span>
                   </span>
                   <button
@@ -285,21 +285,21 @@ ${canonical}`);
 
         {/* Right Column: External Solve & Submit Box */}
         <div className="lg:col-span-5 space-y-5">
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-5 sticky top-20">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-xs dark:shadow-none space-y-5 sticky top-20">
             <div className="space-y-1">
-              <h3 className="text-base font-bold text-slate-900 flex items-center space-x-2">
+              <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center space-x-2">
                 <Zap className="w-4 h-4 text-indigo-600" />
                 <span>Submit Solution for Verification</span>
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Solve on OnlineGDB or GitHub, paste the link below, and the platform will fetch and verify correctness + check plagiarism.
               </p>
             </div>
 
             {/* External solve helper banner */}
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2.5">
+            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-3.5 space-y-2.5">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-slate-800">Solve in Online IDE:</span>
+                <span className="font-bold text-slate-800 dark:text-slate-100">Solve in Online IDE:</span>
                 <a
                   href="https://www.onlinegdb.com"
                   target="_blank"
@@ -310,14 +310,14 @@ ${canonical}`);
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </div>
-              <p className="text-[11px] text-slate-600">
+              <p className="text-[11px] text-slate-600 dark:text-slate-300">
                 Click "Share" on OnlineGDB, copy the URL (e.g. <code>onlinegdb.com/xxxx</code>), and paste it below.
               </p>
             </div>
 
             {/* 1-Click Preset Demo Buttons */}
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-600">
+              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-600 dark:text-slate-300">
                 <span>Quick Test Presets (Instant Demo):</span>
               </div>
               <div className="grid grid-cols-3 gap-1.5">
@@ -351,7 +351,7 @@ ${canonical}`);
             {/* Submission Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1">
+                <label className="block text-xs font-bold text-slate-800 dark:text-slate-100 mb-1">
                   External Solution URL
                 </label>
                 <input
@@ -359,7 +359,7 @@ ${canonical}`);
                   value={submissionUrl}
                   onChange={(e) => setSubmissionUrl(e.target.value)}
                   placeholder="https://onlinegdb.com/xxxxx or https://github.com/..."
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:bg-white"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:bg-white"
                 />
                 <span className="text-[10px] text-slate-400 mt-1 block">
                   Supports OnlineGDB, GitHub blobs, Gist, and Pastebin.

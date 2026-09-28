@@ -33,7 +33,7 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
   return (
     <div className="max-w-4xl mx-auto space-y-6 py-6">
       {/* Top Banner */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-xs dark:shadow-none">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-700">
@@ -41,7 +41,7 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h2 className="text-xl font-bold text-slate-900">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
                   {extractedData.candidateName || 'Candidate Profile'}
                 </h2>
                 <span className="text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center space-x-1">
@@ -49,7 +49,7 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
                   <span>Resume Extracted</span>
                 </span>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Target Role: <strong className="text-indigo-600 font-semibold">{targetRole.title}</strong> • {extractedData.rawSkillCount} distinct skills identified
               </p>
               {extractedData.email && (
@@ -64,7 +64,7 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
             <button
               type="button"
               onClick={onReset}
-              className="px-3 py-2 border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl text-xs font-semibold flex items-center space-x-1 transition-all"
+              className="px-3 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl text-xs font-semibold flex items-center space-x-1 transition-all"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Change Resume</span>
@@ -73,7 +73,7 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
               type="button"
               disabled={isLoading}
               onClick={onProceedToGapAnalysis}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold flex items-center space-x-1.5 shadow-xs transition-all"
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold flex items-center space-x-1.5 shadow-xs dark:shadow-none transition-all"
             >
               <span>View Gap Analysis</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -82,7 +82,7 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
         </div>
 
         {extractedData.summary && (
-          <p className="text-xs text-slate-600 mt-4 bg-slate-50 p-3 rounded-xl border border-slate-200/80">
+          <p className="text-xs text-slate-600 dark:text-slate-300 mt-4 bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-200/80">
             {extractedData.summary}
           </p>
         )}
@@ -90,14 +90,14 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
 
       {/* Education */}
       {extractedData.education && extractedData.education.length > 0 && (
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
-          <div className="flex items-center space-x-2 text-xs font-bold text-slate-900 uppercase tracking-wider">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 shadow-xs dark:shadow-none space-y-3">
+          <div className="flex items-center space-x-2 text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
             <GraduationCap className="w-4 h-4 text-amber-600" />
             <span>Education</span>
           </div>
           <div className="space-y-1">
             {extractedData.education.map((edu, idx) => (
-              <p key={idx} className="text-xs text-slate-700 bg-amber-50/50 border border-amber-100 px-3 py-2 rounded-lg">
+              <p key={idx} className="text-xs text-slate-700 dark:text-slate-200 bg-amber-50/50 border border-amber-100 px-3 py-2 rounded-lg">
                 {edu}
               </p>
             ))}
@@ -108,8 +108,8 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
       {/* Extracted Skills Categorized */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Languages */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
-          <div className="flex items-center space-x-2 text-xs font-bold text-slate-900 uppercase tracking-wider">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 shadow-xs dark:shadow-none space-y-3">
+          <div className="flex items-center space-x-2 text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
             <Code2 className="w-4 h-4 text-blue-600" />
             <span>Programming Languages ({languages.length})</span>
           </div>
@@ -123,7 +123,7 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
                 >
                   <span className="font-semibold">{s.name}</span>
                   {s.proficiency && (
-                    <span className="text-[10px] text-blue-700 bg-white px-1.5 py-0.2 rounded font-medium">
+                    <span className="text-[10px] text-blue-700 bg-white dark:bg-slate-900 px-1.5 py-0.2 rounded font-medium">
                       {s.proficiency}
                     </span>
                   )}
@@ -136,8 +136,8 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
         </div>
 
         {/* Frameworks & Libraries */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
-          <div className="flex items-center space-x-2 text-xs font-bold text-slate-900 uppercase tracking-wider">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 shadow-xs dark:shadow-none space-y-3">
+          <div className="flex items-center space-x-2 text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
             <Layers className="w-4 h-4 text-indigo-600" />
             <span>Frameworks & Libraries ({frameworks.length})</span>
           </div>
@@ -151,7 +151,7 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
                 >
                   <span className="font-semibold">{s.name}</span>
                   {s.proficiency && (
-                    <span className="text-[10px] text-indigo-700 bg-white px-1.5 py-0.2 rounded font-medium">
+                    <span className="text-[10px] text-indigo-700 bg-white dark:bg-slate-900 px-1.5 py-0.2 rounded font-medium">
                       {s.proficiency}
                     </span>
                   )}
@@ -164,8 +164,8 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
         </div>
 
         {/* Databases */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
-          <div className="flex items-center space-x-2 text-xs font-bold text-slate-900 uppercase tracking-wider">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 shadow-xs dark:shadow-none space-y-3">
+          <div className="flex items-center space-x-2 text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
             <Database className="w-4 h-4 text-emerald-600" />
             <span>Databases & Storage ({databases.length})</span>
           </div>
@@ -179,7 +179,7 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
                 >
                   <span className="font-semibold">{s.name}</span>
                   {s.proficiency && (
-                    <span className="text-[10px] text-emerald-700 bg-white px-1.5 py-0.2 rounded font-medium">
+                    <span className="text-[10px] text-emerald-700 bg-white dark:bg-slate-900 px-1.5 py-0.2 rounded font-medium">
                       {s.proficiency}
                     </span>
                   )}
@@ -194,8 +194,8 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
         </div>
 
         {/* Tools & DevOps */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
-          <div className="flex items-center space-x-2 text-xs font-bold text-slate-900 uppercase tracking-wider">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 shadow-xs dark:shadow-none space-y-3">
+          <div className="flex items-center space-x-2 text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
             <Wrench className="w-4 h-4 text-purple-600" />
             <span>Developer Tools & Platforms ({tools.length})</span>
           </div>
@@ -218,8 +218,8 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
 
       {/* Concepts & Additional Skills */}
       {concepts.length > 0 && (
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
-          <div className="flex items-center space-x-2 text-xs font-bold text-slate-900 uppercase tracking-wider">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 shadow-xs dark:shadow-none space-y-3">
+          <div className="flex items-center space-x-2 text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
             <Lightbulb className="w-4 h-4 text-amber-500" />
             <span>Concepts & Additional Skills ({concepts.length})</span>
           </div>
@@ -232,7 +232,7 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
               >
                 <span className="font-semibold">{s.name}</span>
                 {s.proficiency && (
-                  <span className="text-[10px] text-amber-700 bg-white px-1.5 py-0.2 rounded font-medium">
+                  <span className="text-[10px] text-amber-700 bg-white dark:bg-slate-900 px-1.5 py-0.2 rounded font-medium">
                     {s.proficiency}
                   </span>
                 )}
@@ -249,29 +249,29 @@ export const ResumeProfileView: React.FC<ResumeProfileViewProps> = ({
 
       {/* Extracted Projects */}
       {extractedData.projects && extractedData.projects.length > 0 && (
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
-          <div className="flex items-center space-x-2 text-slate-900 font-semibold">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-xs dark:shadow-none space-y-4">
+          <div className="flex items-center space-x-2 text-slate-900 dark:text-white font-semibold">
             <FolderGit2 className="w-5 h-5 text-indigo-600" />
             <span>Extracted Projects ({extractedData.projects.length})</span>
           </div>
 
           <div className="space-y-3">
             {extractedData.projects.map((proj, idx) => (
-              <div key={idx} className="bg-slate-50 border border-slate-200/80 rounded-xl p-4 space-y-2">
+              <div key={idx} className="bg-slate-50 dark:bg-slate-950 border border-slate-200/80 rounded-xl p-4 space-y-2">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-xs text-slate-900">{proj.title}</h4>
+                  <h4 className="font-bold text-xs text-slate-900 dark:text-white">{proj.title}</h4>
                   <div className="flex flex-wrap gap-1">
                     {proj.technologies?.map((tech, tIdx) => (
                       <span
                         key={tIdx}
-                        className="text-[10px] bg-white border border-slate-200 text-slate-700 px-2 py-0.5 rounded font-mono"
+                        className="text-[10px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 px-2 py-0.5 rounded font-mono"
                       >
                         {tech}
                       </span>
                     ))}
                   </div>
                 </div>
-                <p className="text-xs text-slate-600">{proj.description}</p>
+                <p className="text-xs text-slate-600 dark:text-slate-300">{proj.description}</p>
               </div>
             ))}
           </div>
